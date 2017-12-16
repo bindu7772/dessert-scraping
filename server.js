@@ -29,7 +29,7 @@ app.use(express.static('public'));
 // Set mongoose to leverage built in JavaScript ES6 Promises
 // Connect to the Mongo DB
 mongoose.Promise = Promise;
-mongoose.connect('mongodb://localhost/week18Populater', {
+mongoose.connect('mongodb://localhost/scrapDB', {
   useMongoClient: true
 });
 
@@ -37,7 +37,7 @@ mongoose.connect('mongodb://localhost/week18Populater', {
 
 // A GET route for scraping the echojs website
 app.get('/scrape', function(req, res) {
-  // First, we grab the body of the html with request
+ // First, we grab the body of the html with request
   axios.get('https://www.dessertfortwo.com/').then(function(response) {
     // Then, we load that into cheerio and save it to $ for a shorthand selector
     var $ = cheerio.load(response.data);
@@ -48,14 +48,23 @@ app.get('/scrape', function(req, res) {
 
       // Add the text and href of every link, and save them as properties of the result object
       result.title = $(this)
-        .children('a')
-        .text();
+        .find("div")
+              .find("div")
+              .find("a")
+              .attr("title");
       result.img=$(this)
-          .children('a')
-          .attr('src');
+          .find("div")
+              .find("div")
+              .find("a")
+              .find("img")
+              .attr("src");
       result.link = $(this)
-        .children('a')
-        .attr('href');
+              .find("div")
+              .find("div")
+              .find("a")
+              .attr("href");
+
+        console.log(result.title);
 
       // Create a new Recipe using the `result` object built from scraping
       db.Recipe.create(result)
