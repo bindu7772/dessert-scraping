@@ -25,23 +25,21 @@ app.use(logger('dev'));
 app.use(bodyParser.urlencoded({ extended: true }));
 // Use express.static to serve the public folder as a static directory
 app.use(express.static('public'));
+var MONGODB_URI = process.env.MONGODB_URI || "mongodb://localhost/scrapDB";
+
 
 // Set mongoose to leverage built in JavaScript ES6 Promises
 // Connect to the Mongo DB
 mongoose.Promise = Promise;
+mongoose.connect( MONGODB_URI, {
 
-var dbUri = 'mongodb://localhost/scrapDB';
+   useMongoClient: true
 
-if(process.env.MONGODB_URI){
-  mongoose.connect(process.env.MONGODB_URI);
-}else{
-  mongoose.connect(dbUri);
-}
+ });
 
 // Routes
 
 // A GET route for scraping the echojs website
-app.get('/scrape', function(req, res) {
  // First, we grab the body of the html with request
   axios.get('https://www.dessertfortwo.com/').then(function(response) {
     // Then, we load that into cheerio and save it to $ for a shorthand selector
@@ -84,7 +82,7 @@ app.get('/scrape', function(req, res) {
     });
     res.send('Scrape Complete');
   });
-});
+//});
 
 // Route for getting all Recipes from the db
 app.get('/recipes', function(req, res) {
