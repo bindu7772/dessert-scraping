@@ -29,9 +29,14 @@ app.use(express.static('public'));
 // Set mongoose to leverage built in JavaScript ES6 Promises
 // Connect to the Mongo DB
 mongoose.Promise = Promise;
-mongoose.connect('mongodb://localhost/scrapDB', {
-  useMongoClient: true
-});
+
+var dbUri = 'mongodb://localhost/scrapDB';
+
+if(process.env.MONGODB_URI){
+  mongoose.connect(process.env.MONGODB_URI);
+}else{
+  mongoose.connect(dbUri);
+}
 
 // Routes
 

@@ -3,14 +3,19 @@ $.getJSON("/recipes", function(data) {
   // For each one
   for (var i = 0; i < data.length; i++) {
     // Display the apropos information on the page
-    $("#recipes").append("<p data-id='" + data[i]._id + "'>" + data[i].title + "<br />" + data[i].link + "</p>"); 
+     // $("#recipes").append("<p data-id='" + data[i]._id + "'>" + data[i].title + "<br />" + data[i].link + "</p>"); 
 
+
+    var jt = '<div data-id = "' + data[i]._id + '" class = "jumbotron jtron"><h3>'
+     + data[i].title + '</h3><br /><img src="' + data[i].img + '" class = "img img-responsive simg"><br /><a href = "'
+     + data[i].link + '" class="btn btn-primary" target = "_blank">Recipe</a>';
+    $("#recipes").append(jt);
   }
 });
 
 
 // Whenever someone clicks a p tag
-$(document).on("click", "p", function() {
+$(document).on("click", ".jumbotron", function() {
   // Empty the notes from the note section
   $("#notes").empty();
   // Save the id from the p tag
